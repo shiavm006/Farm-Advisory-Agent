@@ -1384,7 +1384,7 @@ def render_sidebar():
         <div class="sbft">
             Random Forest &middot; 100 estimators<br>
             FAO Global Crop Dataset<br>
-            HF: shiavm006/Crop-yield_pridiction
+            UI: Streamlit Community Cloud &middot; Model: <code>shiavm006/Crop-yield_pridiction</code>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1762,10 +1762,10 @@ def page_about():
     # ── Info cards grid ───────────────────────────────────────────────────────
     st.markdown('<div class="abg">', unsafe_allow_html=True)
     for lbl, val, desc in [
-        ("Dataset",   "FAO",           "Global crop yield, rainfall, temperature, pesticides"),
-        ("Algorithm", "Random Forest", "100 estimators \u00b7 sklearn \u00b7 StandardScaler pipeline"),
-        ("Target",    "t / ha",        "FAO hg/ha output converted to tonnes per hectare"),
-        ("Hosting",   "HuggingFace",   "shiavm006/Crop-yield_pridiction"),
+        ("Dataset",   "FAO",            "Global crop yield, rainfall, temperature, pesticides"),
+        ("Algorithm", "Random Forest",  "100 estimators \u00b7 sklearn \u00b7 StandardScaler pipeline"),
+        ("Target",    "t / ha",         "FAO hg/ha output converted to tonnes per hectare"),
+        ("Hosting",   "Streamlit + HF", "UI on Streamlit Community Cloud; model artifacts on Hugging Face (shiavm006/Crop-yield_pridiction)"),
     ]:
         st.markdown(f"""
         <div class="abt">
