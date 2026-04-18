@@ -8,7 +8,8 @@ reportlab>=4.0.0
 langchain
 langgraph
 langchain-community
-langchain-anthropic   
+langchain-anthropic
+langchain-huggingface
 faiss-cpu
 pypdf
 anthropic
