@@ -23,20 +23,20 @@ def build_graph():
     graph = StateGraph(FarmState)
 
     # ── Register nodes ────────────────────────────────────────────────────────
-    graph.add_node("parse_input",     parse_input)
-    graph.add_node("predict_yield",   predict_yield)
-    graph.add_node("assess_risk",     assess_risk)
-    graph.add_node("retrieve_docs",   retrieve_docs)
+    graph.add_node("parse_input", parse_input)
+    graph.add_node("predict_yield", predict_yield)
+    graph.add_node("assess_risk", assess_risk)
+    graph.add_node("retrieve_docs", retrieve_docs)
     graph.add_node("generate_advice", generate_advice)
 
     # ── Entry point ───────────────────────────────────────────────────────────
     graph.set_entry_point("parse_input")
 
     # ── Edges (sequential pipeline) ───────────────────────────────────────────
-    graph.add_edge("parse_input",     "predict_yield")
-    graph.add_edge("predict_yield",   "assess_risk")
-    graph.add_edge("assess_risk",     "retrieve_docs")
-    graph.add_edge("retrieve_docs",   "generate_advice")
+    graph.add_edge("parse_input", "predict_yield")
+    graph.add_edge("predict_yield", "assess_risk")
+    graph.add_edge("assess_risk", "retrieve_docs")
+    graph.add_edge("retrieve_docs", "generate_advice")
     graph.add_edge("generate_advice", END)
 
     return graph.compile()
@@ -95,25 +95,25 @@ def run_agent(
     graph = get_graph()
 
     initial_state: FarmState = {
-        "crop":               crop,
-        "area":               area,
-        "year":               year,
-        "rainfall":           rainfall,
-        "temperature":        temperature,
-        "pesticides":         pesticides,
-        "user_query":         user_query,
-        "predicted_yield_hg":  None,
+        "crop": crop,
+        "area": area,
+        "year": year,
+        "rainfall": rainfall,
+        "temperature": temperature,
+        "pesticides": pesticides,
+        "user_query": user_query,
+        "predicted_yield_hg": None,
         "predicted_yield_tha": None,
-        "yield_risk":          None,
-        "yield_band":          None,
-        "benchmark_avg":       None,
-        "retrieved_docs":      None,
-        "source_files":        None,
-        "field_summary":       None,
-        "recommendations":     None,
-        "sources":             None,
-        "disclaimer":          None,
-        "error":               None,
+        "yield_risk": None,
+        "yield_band": None,
+        "benchmark_avg": None,
+        "retrieved_docs": None,
+        "source_files": None,
+        "field_summary": None,
+        "recommendations": None,
+        "sources": None,
+        "disclaimer": None,
+        "error": None,
     }
 
     result = graph.invoke(initial_state)
@@ -144,28 +144,28 @@ def run_chat(
     farm_ctx = farm_ctx or {}
 
     initial_state: FarmState = {
-        "crop":                farm_ctx.get("crop", ""),
-        "area":                farm_ctx.get("area", ""),
-        "year":                int(farm_ctx.get("year", 2024) or 2024),
-        "rainfall":            float(farm_ctx.get("rainfall", 0.0) or 0.0),
-        "temperature":         float(farm_ctx.get("temperature", 0.0) or 0.0),
-        "pesticides":          float(farm_ctx.get("pesticides", 0.0) or 0.0),
-        "user_query":          messages[-1]["content"] if messages else "",
-        "predicted_yield_hg":  farm_ctx.get("predicted_yield_hg"),
+        "crop": farm_ctx.get("crop", ""),
+        "area": farm_ctx.get("area", ""),
+        "year": int(farm_ctx.get("year", 2024) or 2024),
+        "rainfall": float(farm_ctx.get("rainfall", 0.0) or 0.0),
+        "temperature": float(farm_ctx.get("temperature", 0.0) or 0.0),
+        "pesticides": float(farm_ctx.get("pesticides", 0.0) or 0.0),
+        "user_query": messages[-1]["content"] if messages else "",
+        "predicted_yield_hg": farm_ctx.get("predicted_yield_hg"),
         "predicted_yield_tha": farm_ctx.get("predicted_yield_tha"),
-        "yield_risk":          farm_ctx.get("yield_risk"),
-        "yield_band":          farm_ctx.get("yield_band"),
-        "benchmark_avg":       farm_ctx.get("benchmark_avg"),
-        "retrieved_docs":      None,
-        "source_files":        None,
-        "field_summary":       None,
-        "recommendations":     None,
-        "sources":             None,
-        "disclaimer":          None,
-        "messages":            list(messages),
-        "assistant_reply":     None,
-        "uploaded_docs_text":  uploaded_docs_text or "",
-        "error":               None,
+        "yield_risk": farm_ctx.get("yield_risk"),
+        "yield_band": farm_ctx.get("yield_band"),
+        "benchmark_avg": farm_ctx.get("benchmark_avg"),
+        "retrieved_docs": None,
+        "source_files": None,
+        "field_summary": None,
+        "recommendations": None,
+        "sources": None,
+        "disclaimer": None,
+        "messages": list(messages),
+        "assistant_reply": None,
+        "uploaded_docs_text": uploaded_docs_text or "",
+        "error": None,
     }
 
     graph = get_chat_graph()

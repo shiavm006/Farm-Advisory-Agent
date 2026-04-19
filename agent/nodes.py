@@ -26,7 +26,7 @@ load_dotenv()
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 MODEL_DIR = Path(__file__).parent.parent / "model"
-HF_REPO   = "shiavm006/Crop-yield_pridiction"
+HF_REPO = "shiavm006/Crop-yield_pridiction"
 
 
 def _load_pkl(filename: str):
@@ -36,20 +36,22 @@ def _load_pkl(filename: str):
         with open(local, "rb") as f:
             return pickle.load(f)
     from huggingface_hub import hf_hub_download
+
     path = hf_hub_download(repo_id=HF_REPO, filename=filename)
     with open(path, "rb") as f:
         return pickle.load(f)
 
+
 # ── Crop benchmarks (average t/ha from FAO data) ──────────────────────────────
 CROP_BENCHMARKS = {
-    "wheat":            3.5,
-    "rice, paddy":      4.5,
-    "maize":            5.5,
-    "potatoes":        20.0,
-    "cassava":         12.0,
-    "soybeans":         2.5,
-    "sorghum":          1.5,
-    "sweet potatoes":  10.0,
+    "wheat": 3.5,
+    "rice, paddy": 4.5,
+    "maize": 5.5,
+    "potatoes": 20.0,
+    "cassava": 12.0,
+    "soybeans": 2.5,
+    "sorghum": 1.5,
+    "sweet potatoes": 10.0,
 }
 
 
@@ -67,10 +69,10 @@ def parse_input(state: FarmState) -> FarmState:
             )
 
         # Clamp values to reasonable ranges
-        state["rainfall"]    = max(0.0, float(state["rainfall"]))
+        state["rainfall"] = max(0.0, float(state["rainfall"]))
         state["temperature"] = float(state["temperature"])
-        state["pesticides"]  = max(0.0, float(state["pesticides"]))
-        state["year"]        = int(state["year"])
+        state["pesticides"] = max(0.0, float(state["pesticides"]))
+        state["year"] = int(state["year"])
 
         # Initialize output fields
         state["error"] = None
@@ -91,18 +93,22 @@ def predict_yield(state: FarmState) -> FarmState:
 
     try:
         # Load artifacts (local or HuggingFace)
-        model          = _load_pkl("model.pkl")
-        scaler         = _load_pkl("scaler.pkl")
+        model = _load_pkl("model.pkl")
+        scaler = _load_pkl("scaler.pkl")
         feature_config = _load_pkl("features.pkl")
 
         # Build feature vector using same logic as the main app (build_row)
-        feature_names = feature_config if isinstance(feature_config, list) else feature_config.get("features", [])
+        feature_names = (
+            feature_config
+            if isinstance(feature_config, list)
+            else feature_config.get("features", [])
+        )
 
         numeric = {
             "Year": state["year"],
             "average_rain_fall_mm_per_year": state["rainfall"],
             "pesticides_tonnes": state["pesticides"],
-            "avg_temp": state["temperature"]
+            "avg_temp": state["temperature"],
         }
 
         vals = []
@@ -112,17 +118,24 @@ def predict_yield(state: FarmState) -> FarmState:
             elif name.startswith("Area_"):
                 vals.append(1.0 if name == f"Area_{state['area']}" else 0.0)
             elif name.startswith("Item_"):
-                vals.append(1.0 if (name == f"Item_{state['crop']}" or state["crop"] in name.replace("_", " ")) else 0.0)
+                vals.append(
+                    1.0
+                    if (
+                        name == f"Item_{state['crop']}"
+                        or state["crop"] in name.replace("_", " ")
+                    )
+                    else 0.0
+                )
             else:
                 vals.append(0.0)
 
         feature_vector = np.array([vals], dtype=float)
         X_scaled = scaler.transform(feature_vector)
 
-        prediction_hg  = float(model.predict(X_scaled)[0])
+        prediction_hg = float(model.predict(X_scaled)[0])
         prediction_tha = round(prediction_hg / 10000, 2)
 
-        state["predicted_yield_hg"]  = prediction_hg
+        state["predicted_yield_hg"] = prediction_hg
         state["predicted_yield_tha"] = prediction_tha
 
     except Exception as e:
@@ -140,9 +153,9 @@ def assess_risk(state: FarmState) -> FarmState:
         return state
 
     try:
-        crop_key   = state["crop"].lower()
-        benchmark  = CROP_BENCHMARKS.get(crop_key, 3.0)
-        yield_tha  = state.get("predicted_yield_tha", 0)
+        crop_key = state["crop"].lower()
+        benchmark = CROP_BENCHMARKS.get(crop_key, 3.0)
+        yield_tha = state.get("predicted_yield_tha", 0)
 
         state["benchmark_avg"] = benchmark
 
@@ -180,7 +193,7 @@ def retrieve_docs(state: FarmState) -> FarmState:
         chunks, sources = retrieve(query, k=5)
 
         state["retrieved_docs"] = chunks
-        state["source_files"]   = sources
+        state["source_files"] = sources
 
     except Exception as e:
         state["error"] = f"Document retrieval error: {str(e)}"
@@ -202,22 +215,24 @@ def generate_advice(state: FarmState) -> FarmState:
         # Format retrieved docs
         docs_text = "\n\n---\n\n".join(state.get("retrieved_docs", []))
         if not docs_text:
-            docs_text = "No specific documents retrieved. Use general agronomy best practices."
+            docs_text = (
+                "No specific documents retrieved. Use general agronomy best practices."
+            )
 
         # Fill prompt
         prompt = ADVISORY_PROMPT.format(
-            crop             = state["crop"],
-            area             = state["area"],
-            year             = state["year"],
-            rainfall         = state["rainfall"],
-            temperature      = state["temperature"],
-            pesticides       = state["pesticides"],
-            predicted_yield  = state.get("predicted_yield_tha", "N/A"),
-            yield_risk       = state.get("yield_risk", "Unknown"),
-            yield_band       = state.get("yield_band", "Unknown"),
-            benchmark_avg    = state.get("benchmark_avg", "N/A"),
-            user_query       = state["user_query"],
-            retrieved_docs   = docs_text,
+            crop=state["crop"],
+            area=state["area"],
+            year=state["year"],
+            rainfall=state["rainfall"],
+            temperature=state["temperature"],
+            pesticides=state["pesticides"],
+            predicted_yield=state.get("predicted_yield_tha", "N/A"),
+            yield_risk=state.get("yield_risk", "Unknown"),
+            yield_band=state.get("yield_band", "Unknown"),
+            benchmark_avg=state.get("benchmark_avg", "N/A"),
+            user_query=state["user_query"],
+            retrieved_docs=docs_text,
         )
 
         # Try the same broad, current model list as chat_turn.
@@ -230,7 +245,7 @@ def generate_advice(state: FarmState) -> FarmState:
                 response = client.messages.create(
                     model=model_name,
                     max_tokens=1500,
-                    messages=[{"role": "user", "content": prompt}]
+                    messages=[{"role": "user", "content": prompt}],
                 )
                 break
             except Exception as e:
@@ -255,17 +270,26 @@ def generate_advice(state: FarmState) -> FarmState:
 
         result = json.loads(raw)
 
-        state["field_summary"]    = result.get("field_summary", "")
-        state["recommendations"]  = result.get("recommendations", [])
-        state["sources"]          = result.get("sources", [])
-        state["disclaimer"]       = result.get("disclaimer", "Consult local agricultural extension officers for region-specific advice.")
+        state["field_summary"] = result.get("field_summary", "")
+        state["recommendations"] = result.get("recommendations", [])
+        state["sources"] = result.get("sources", [])
+        state["disclaimer"] = result.get(
+            "disclaimer",
+            "Consult local agricultural extension officers for region-specific advice.",
+        )
 
     except json.JSONDecodeError:
         # Fallback: return raw text if JSON parsing fails
-        state["field_summary"]   = raw[:500] if raw else "Advisory generation encountered an issue."
-        state["recommendations"] = ["Please consult your local agricultural extension officer."]
-        state["sources"]         = state.get("source_files", [])
-        state["disclaimer"]      = "Yield predictions are estimates. Always consult local experts before making farming decisions."
+        state["field_summary"] = (
+            raw[:500] if raw else "Advisory generation encountered an issue."
+        )
+        state["recommendations"] = [
+            "Please consult your local agricultural extension officer."
+        ]
+        state["sources"] = state.get("source_files", [])
+        state["disclaimer"] = (
+            "Yield predictions are estimates. Always consult local experts before making farming decisions."
+        )
 
     except Exception as e:
         # If all Anthropic models are unavailable, return a safe local fallback
@@ -286,7 +310,9 @@ def generate_advice(state: FarmState) -> FarmState:
                 "Maintain field sanitation (remove infected debris, manage weeds, improve drainage).",
                 "Track yield and input records to adjust practices in the next cycle.",
             ]
-            state["sources"] = state.get("source_files", []) or ["Local RAG references from rag/docs"]
+            state["sources"] = state.get("source_files", []) or [
+                "Local RAG references from rag/docs"
+            ]
             state["disclaimer"] = (
                 "This fallback advisory is generated without live LLM reasoning due to model access limits. "
                 "Follow local regulations for pesticide/fertilizer use and consult local extension officers."
@@ -380,7 +406,11 @@ def chat_turn(state: FarmState) -> FarmState:
 
         # ── Retrieval query — blend latest user msg with crop context ────────
         crop = state.get("crop") or ""
-        query = latest_user if not crop else f"{crop} {state.get('area', '')} :: {latest_user}"
+        query = (
+            latest_user
+            if not crop
+            else f"{crop} {state.get('area', '')} :: {latest_user}"
+        )
         try:
             chunks, sources = retrieve(query, k=4)
         except Exception as ret_err:
@@ -442,7 +472,10 @@ def chat_turn(state: FarmState) -> FarmState:
 
         if not reply_text:
             # Local, non-LLM fallback so the chat still works in demos.
-            snippets = "\n\n".join(f"• {c[:400].strip()}" for c in chunks[:3]) or "• (No snippets available.)"
+            snippets = (
+                "\n\n".join(f"• {c[:400].strip()}" for c in chunks[:3])
+                or "• (No snippets available.)"
+            )
             reply_text = CHAT_FALLBACK_TEMPLATE.format(
                 crop=crop or "your crop",
                 area=state.get("area") or "your region",

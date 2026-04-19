@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 # Load .env BEFORE any os.environ.get() checks (e.g. ANTHROPIC_API_KEY).
 try:
     from dotenv import load_dotenv
+
     load_dotenv(Path(__file__).parent / ".env")
 except Exception:
     pass
@@ -34,32 +35,50 @@ st.set_page_config(
 # ══════════════════════════════════════════════════════════════════════════════
 #  THEME — must be set before CSS
 # ══════════════════════════════════════════════════════════════════════════════
-if "theme" not in st.session_state: st.session_state.theme = "dark"
-IS_DARK = (st.session_state.theme == "dark")
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+IS_DARK = st.session_state.theme == "dark"
 
 if IS_DARK:
-    _BG   = "#080809";  _BG2  = "#0f0f10";  _SF   = "#0f0f10";  _SF2  = "#161618";  _SF3  = "#1c1c1f"
-    _BD   = "#1f1f22";  _BD2  = "#2a2a2f"
-    _ACC  = "#a8e063";  _ACC2 = "#6abf3a"
-    _TX   = "#ececec";  _TX2  = "#aaaaaa";   _MU   = "#555558"
+    _BG = "#080809"
+    _BG2 = "#0f0f10"
+    _SF = "#0f0f10"
+    _SF2 = "#161618"
+    _SF3 = "#1c1c1f"
+    _BD = "#1f1f22"
+    _BD2 = "#2a2a2f"
+    _ACC = "#a8e063"
+    _ACC2 = "#6abf3a"
+    _TX = "#ececec"
+    _TX2 = "#aaaaaa"
+    _MU = "#555558"
     _LOGO_C = "#060806"
-    _SB_BG  = "#0b0b0c"   # slightly darker than main bg for sidebar
+    _SB_BG = "#0b0b0c"  # slightly darker than main bg for sidebar
     _TOGGLE_LABEL = "Light Mode"
     _HERO_GR = "linear-gradient(135deg,#0a1406 0%,#0f1009 40%,#0a0a0b 100%)"
 else:
-    _BG   = "#F5F2EC";  _BG2  = "#EDE9E1";  _SF   = "#FFFFFF";  _SF2  = "#F2EEE7";  _SF3  = "#E8E4DC"
-    _BD   = "#DDD8CF";  _BD2  = "#BBBAAF"
-    _ACC  = "#2C7A18";  _ACC2 = "#4CA030"
-    _TX   = "#1A201C";  _TX2  = "#4A5E4C";   _MU   = "#7A8A7A"
+    _BG = "#F5F2EC"
+    _BG2 = "#EDE9E1"
+    _SF = "#FFFFFF"
+    _SF2 = "#F2EEE7"
+    _SF3 = "#E8E4DC"
+    _BD = "#DDD8CF"
+    _BD2 = "#BBBAAF"
+    _ACC = "#2C7A18"
+    _ACC2 = "#4CA030"
+    _TX = "#1A201C"
+    _TX2 = "#4A5E4C"
+    _MU = "#7A8A7A"
     _LOGO_C = "#FFFFFF"
-    _SB_BG  = "#EDE9E1"
+    _SB_BG = "#EDE9E1"
     _TOGGLE_LABEL = "Dark Mode"
     _HERO_GR = "linear-gradient(135deg,#EAF5E6 0%,#D3ECCB 40%,#E8F5E0 100%)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  GLOBAL CSS  — dark/light, editorial, mono-accented
 # ══════════════════════════════════════════════════════════════════════════════
-st.markdown(f"""
+st.markdown(
+    f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -352,10 +371,13 @@ div[data-testid="stNumberInput"] input:focus {{
 .animate-fade-in  {{ animation: fadeIn 0.4s ease forwards; }}
 .animate-count-up {{ animation: countUp 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; }}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ── Static CSS (preloader, page components — no dynamic tokens) ──
-st.markdown("""
+st.markdown(
+    """
 <style>
 /* ── Preloader overlay ── */
 .preloader {
@@ -848,10 +870,13 @@ st.markdown("""
 .cv { font-family: 'Outfit', sans-serif; font-size: 1.55rem; font-weight: 600; color: var(--text); line-height: 1.1; animation: countUp .5s cubic-bezier(.22,1,.36,1) .15s both; }
 .cs { font-size: .58rem; color: var(--muted); margin-top: 2px; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ── Dynamic CSS (hero gradient, button shimmer, nav-on active tinting) ──
-st.markdown(f"""
+st.markdown(
+    f"""
 <style>
 /* ── Yield hero block ── */
 .hero {{
@@ -987,34 +1012,54 @@ section[data-testid="stSidebar"] .nav-on .stButton > button {{
     font-weight: 500 !important;
 }}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  SESSION STATE INIT
 # ══════════════════════════════════════════════════════════════════════════════
-if "page"              not in st.session_state: st.session_state.page              = "model"
-if "result"            not in st.session_state: st.session_state.result            = None
-if "inputs"            not in st.session_state: st.session_state.inputs            = {}
-if "app_loaded"        not in st.session_state: st.session_state.app_loaded        = False
-if "advisory_result"   not in st.session_state: st.session_state.advisory_result   = None
+if "page" not in st.session_state:
+    st.session_state.page = "model"
+if "result" not in st.session_state:
+    st.session_state.result = None
+if "inputs" not in st.session_state:
+    st.session_state.inputs = {}
+if "app_loaded" not in st.session_state:
+    st.session_state.app_loaded = False
+if "advisory_result" not in st.session_state:
+    st.session_state.advisory_result = None
 # ── Chat state for the Advisory Agent ──────────────────────────────────────
-if "chat_messages"     not in st.session_state: st.session_state.chat_messages     = []
-if "chat_farm_ctx"     not in st.session_state: st.session_state.chat_farm_ctx     = {
-    "crop": "Wheat", "area": "India", "year": 2024,
-    "rainfall": 800.0, "temperature": 25.0, "pesticides": 100.0,
-    "predicted_yield_tha": None, "predicted_yield_hg": None,
-    "yield_risk": None, "yield_band": None, "benchmark_avg": None,
-}
-if "chat_uploaded_text"  not in st.session_state: st.session_state.chat_uploaded_text  = ""
-if "chat_uploaded_names" not in st.session_state: st.session_state.chat_uploaded_names = []
-if "chat_context_synced" not in st.session_state: st.session_state.chat_context_synced = False
+if "chat_messages" not in st.session_state:
+    st.session_state.chat_messages = []
+if "chat_farm_ctx" not in st.session_state:
+    st.session_state.chat_farm_ctx = {
+        "crop": "Wheat",
+        "area": "India",
+        "year": 2024,
+        "rainfall": 800.0,
+        "temperature": 25.0,
+        "pesticides": 100.0,
+        "predicted_yield_tha": None,
+        "predicted_yield_hg": None,
+        "yield_risk": None,
+        "yield_band": None,
+        "benchmark_avg": None,
+    }
+if "chat_uploaded_text" not in st.session_state:
+    st.session_state.chat_uploaded_text = ""
+if "chat_uploaded_names" not in st.session_state:
+    st.session_state.chat_uploaded_names = []
+if "chat_context_synced" not in st.session_state:
+    st.session_state.chat_context_synced = False
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  APP PRELOADER
 # ══════════════════════════════════════════════════════════════════════════════
 if not st.session_state.app_loaded:
     loader_ph = st.empty()
-    loader_ph.markdown("""
+    loader_ph.markdown(
+        """
     <div class="preloader">
         <div>
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1032,7 +1077,9 @@ if not st.session_state.app_loaded:
     <style>
     @keyframes dash { to { stroke-dashoffset: 0; } }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     time.sleep(1.6)
     loader_ph.empty()
     st.session_state.app_loaded = True
@@ -1043,15 +1090,24 @@ if not st.session_state.app_loaded:
 # ══════════════════════════════════════════════════════════════════════════════
 HF_REPO = "shiavm006/Crop-yield_pridiction"
 
+
 @st.cache_resource(show_spinner=False)
 def load_artifacts():
     base = Path(__file__).parent / "model"
+
     def _load(p):
-        with open(p, "rb") as f: return pickle.load(f)
+        with open(p, "rb") as f:
+            return pickle.load(f)
+
     if (base / "model.pkl").exists():
-        return _load(base/"model.pkl"), _load(base/"scaler.pkl"), _load(base/"features.pkl")
+        return (
+            _load(base / "model.pkl"),
+            _load(base / "scaler.pkl"),
+            _load(base / "features.pkl"),
+        )
     try:
         from huggingface_hub import hf_hub_download
+
         mp = hf_hub_download(repo_id=HF_REPO, filename="model.pkl")
         sp = hf_hub_download(repo_id=HF_REPO, filename="scaler.pkl")
         fp = hf_hub_download(repo_id=HF_REPO, filename="features.pkl")
@@ -1060,141 +1116,270 @@ def load_artifacts():
         st.error(f"Model load failed: {e}")
         return None, None, None
 
+
 @st.cache_data(show_spinner=False)
 def load_options():
     csv_path = Path(__file__).parent / "Dataset" / "yield_df.csv"
     if not csv_path.exists():
-        areas = ["Albania","Algeria","Angola","Argentina","Australia","Brazil","Canada",
-                 "China","Egypt","Ethiopia","France","Germany","India","Indonesia",
-                 "Iran","Kenya","Mexico","Nigeria","Pakistan","Russia","South Africa",
-                 "Spain","Turkey","United Kingdom","United States of America"]
-        items = ["Cassava","Maize","Potatoes","Rice, paddy","Sorghum",
-                 "Soybeans","Sweet potatoes","Wheat","Yams"]
+        areas = [
+            "Albania",
+            "Algeria",
+            "Angola",
+            "Argentina",
+            "Australia",
+            "Brazil",
+            "Canada",
+            "China",
+            "Egypt",
+            "Ethiopia",
+            "France",
+            "Germany",
+            "India",
+            "Indonesia",
+            "Iran",
+            "Kenya",
+            "Mexico",
+            "Nigeria",
+            "Pakistan",
+            "Russia",
+            "South Africa",
+            "Spain",
+            "Turkey",
+            "United Kingdom",
+            "United States of America",
+        ]
+        items = [
+            "Cassava",
+            "Maize",
+            "Potatoes",
+            "Rice, paddy",
+            "Sorghum",
+            "Soybeans",
+            "Sweet potatoes",
+            "Wheat",
+            "Yams",
+        ]
         return areas, items
     df = pd.read_csv(csv_path)
     return sorted(df["Area"].dropna().unique()), sorted(df["Item"].dropna().unique())
 
+
 def get_feature_names(fc):
-    if fc is None: return None
-    if isinstance(fc, list): return fc
-    if isinstance(fc, dict): return fc.get("feature_names") or fc.get("columns") or fc.get("names")
-    if hasattr(fc, "get_feature_names_out"): return fc.get_feature_names_out().tolist()
+    if fc is None:
+        return None
+    if isinstance(fc, list):
+        return fc
+    if isinstance(fc, dict):
+        return fc.get("feature_names") or fc.get("columns") or fc.get("names")
+    if hasattr(fc, "get_feature_names_out"):
+        return fc.get_feature_names_out().tolist()
     return None
 
+
 def build_row(area, item, year, rainfall, pesticides, avg_temp, fnames):
-    numeric = {"Year": year, "average_rain_fall_mm_per_year": rainfall,
-               "pesticides_tonnes": pesticides, "avg_temp": avg_temp}
+    numeric = {
+        "Year": year,
+        "average_rain_fall_mm_per_year": rainfall,
+        "pesticides_tonnes": pesticides,
+        "avg_temp": avg_temp,
+    }
     vals = []
     for name in fnames:
-        if name in numeric: vals.append(numeric[name])
-        elif name.startswith("Area_"): vals.append(1. if name == f"Area_{area}" else 0.)
+        if name in numeric:
+            vals.append(numeric[name])
+        elif name.startswith("Area_"):
+            vals.append(1.0 if name == f"Area_{area}" else 0.0)
         elif name.startswith("Item_"):
-            vals.append(1. if (name == f"Item_{item}" or item in name.replace("_"," ")) else 0.)
-        else: vals.append(0.)
+            vals.append(
+                1.0
+                if (name == f"Item_{item}" or item in name.replace("_", " "))
+                else 0.0
+            )
+        else:
+            vals.append(0.0)
     return np.array([vals], dtype=float)
+
 
 def make_factor_scores(rainfall, avg_temp, pesticides):
     rng = np.random.default_rng(int(rainfall + avg_temp * 100 + pesticides))
     return {
-        "Rainfall":    round(min(10, max(1, rainfall / 200)), 1),
+        "Rainfall": round(min(10, max(1, rainfall / 200)), 1),
         "Temperature": round(max(1, min(10, 10 - abs(avg_temp - 22) * 0.38)), 1),
-        "Pesticides":  round(min(10, max(1, pesticides / 80)), 1),
-        "Season":      round(float(rng.uniform(5.5, 8.5)), 1),
-        "Soil Proxy":  round(float(rng.uniform(5.0, 8.0)), 1),
+        "Pesticides": round(min(10, max(1, pesticides / 80)), 1),
+        "Season": round(float(rng.uniform(5.5, 8.5)), 1),
+        "Soil Proxy": round(float(rng.uniform(5.0, 8.0)), 1),
     }
+
 
 def make_trend(predicted, year):
     rng = np.random.default_rng(int(predicted) % 999)
     base = predicted * 0.76
-    return [{"Year": y,
-             "Yield": round(base + predicted * 0.059 * i + float(rng.uniform(-0.03, 0.03)) * predicted, 0)}
-            for i, y in enumerate(range(year - 4, year + 1))]
+    return [
+        {
+            "Year": y,
+            "Yield": round(
+                base
+                + predicted * 0.059 * i
+                + float(rng.uniform(-0.03, 0.03)) * predicted,
+                0,
+            ),
+        }
+        for i, y in enumerate(range(year - 4, year + 1))
+    ]
+
 
 def make_benchmarks(predicted, rainfall):
     rng = np.random.default_rng(int(predicted + rainfall) % 9999)
-    return round(predicted * float(rng.uniform(0.76, 0.92)), 0), \
-           round(predicted * float(rng.uniform(0.58, 0.74)), 0)
+    return round(predicted * float(rng.uniform(0.76, 0.92)), 0), round(
+        predicted * float(rng.uniform(0.58, 0.74)), 0
+    )
+
 
 def quality_band(y_hg_ha):
     y = y_hg_ha / 10_000  # convert to t/ha for band calc
-    if y < 1.0:  return "Poor",        "#ff6b6b"
-    if y < 3.0:  return "Fair",        "#d4a040"
-    if y < 6.0:  return "Good",        "#a8e063"
-    if y < 12.0: return "High",        "#6abf3a"
-    return              "Exceptional", "#70d4a0"
+    if y < 1.0:
+        return "Poor", "#ff6b6b"
+    if y < 3.0:
+        return "Fair", "#d4a040"
+    if y < 6.0:
+        return "Good", "#a8e063"
+    if y < 12.0:
+        return "High", "#6abf3a"
+    return "Exceptional", "#70d4a0"
+
 
 # Feature importances (representative RF on FAO dataset)
 FEATS = [
-    ("Rainfall (mm)",  .28),
-    ("Avg Temp (°C)",  .22),
-    ("Pesticides",     .19),
-    ("Year",           .16),
-    ("Crop (OHE)",     .15),
+    ("Rainfall (mm)", 0.28),
+    ("Avg Temp (°C)", 0.22),
+    ("Pesticides", 0.19),
+    ("Year", 0.16),
+    ("Crop (OHE)", 0.15),
 ]
+
 
 def gauge_fig(y_hg_ha):
     yv = round(y_hg_ha / 10_000, 2)
     band, bcol = quality_band(y_hg_ha)
     mx = max(20, yv * 1.4)
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number", value=yv,
-        number=dict(suffix=" t/ha", font=dict(family="Outfit", size=22, color="#ececec")),
-        gauge=dict(
-            axis=dict(range=[0, mx], tickcolor="#555558", tickfont=dict(size=8, color="#555558"), nticks=5),
-            bar=dict(color=bcol, thickness=0.22),
-            bgcolor="#161618", bordercolor="#1f1f22", borderwidth=1,
-            steps=[dict(range=[0, 1],  color="#161618"),
-                   dict(range=[1, 3],  color="rgba(255,107,107,.08)"),
-                   dict(range=[3, 6],  color="rgba(168,224,99,.08)"),
-                   dict(range=[6, mx], color="rgba(168,224,99,.16)")],
-            threshold=dict(line=dict(color=bcol, width=2), thickness=0.8, value=yv),
-        ),
-    ))
-    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                      font=dict(family="DM Mono, monospace", color="#555558", size=10),
-                      margin=dict(l=0, r=0, t=8, b=0), height=200)
+    fig = go.Figure(
+        go.Indicator(
+            mode="gauge+number",
+            value=yv,
+            number=dict(
+                suffix=" t/ha", font=dict(family="Outfit", size=22, color="#ececec")
+            ),
+            gauge=dict(
+                axis=dict(
+                    range=[0, mx],
+                    tickcolor="#555558",
+                    tickfont=dict(size=8, color="#555558"),
+                    nticks=5,
+                ),
+                bar=dict(color=bcol, thickness=0.22),
+                bgcolor="#161618",
+                bordercolor="#1f1f22",
+                borderwidth=1,
+                steps=[
+                    dict(range=[0, 1], color="#161618"),
+                    dict(range=[1, 3], color="rgba(255,107,107,.08)"),
+                    dict(range=[3, 6], color="rgba(168,224,99,.08)"),
+                    dict(range=[6, mx], color="rgba(168,224,99,.16)"),
+                ],
+                threshold=dict(line=dict(color=bcol, width=2), thickness=0.8, value=yv),
+            ),
+        )
+    )
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="DM Mono, monospace", color="#555558", size=10),
+        margin=dict(l=0, r=0, t=8, b=0),
+        height=200,
+    )
     return fig
+
 
 def importance_fig():
-    names = [f[0] for f in FEATS]; vals = [round(f[1]*100, 1) for f in FEATS]
+    names = [f[0] for f in FEATS]
+    vals = [round(f[1] * 100, 1) for f in FEATS]
     mx = max(vals)
     cols = [ACCENT if v == mx else (ACCENT2 if v > 18 else "#2a2a2f") for v in vals]
-    fig = go.Figure(go.Bar(
-        x=vals, y=names, orientation="h",
-        marker=dict(color=cols, line=dict(width=0)),
-        text=[f"{v}%" for v in vals], textposition="outside",
-        textfont=dict(size=9, color="#555558"),
-    ))
+    fig = go.Figure(
+        go.Bar(
+            x=vals,
+            y=names,
+            orientation="h",
+            marker=dict(color=cols, line=dict(width=0)),
+            text=[f"{v}%" for v in vals],
+            textposition="outside",
+            textfont=dict(size=9, color="#555558"),
+        )
+    )
     fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="DM Mono, monospace", color="#555558", size=10),
-        margin=dict(l=0, r=8, t=8, b=0), height=200,
-        xaxis=dict(showgrid=True, gridcolor="#141416", range=[0, 35],
-                   ticksuffix="%", tickfont=dict(size=8)),
+        margin=dict(l=0, r=8, t=8, b=0),
+        height=200,
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#141416",
+            range=[0, 35],
+            ticksuffix="%",
+            tickfont=dict(size=8),
+        ),
         yaxis=dict(showgrid=False, tickfont=dict(size=10, color="#888")),
-        bargap=0.38, showlegend=False,
+        bargap=0.38,
+        showlegend=False,
     )
     return fig
 
+
 def crop_yield_fig():
-    crops  = ["Cassava","Maize","Plantains","Potatoes","Rice","Sorghum","Soybeans","Wheat","Yams"]
+    crops = [
+        "Cassava",
+        "Maize",
+        "Plantains",
+        "Potatoes",
+        "Rice",
+        "Sorghum",
+        "Soybeans",
+        "Wheat",
+        "Yams",
+    ]
     yields = [9.8, 5.2, 6.5, 18.1, 4.6, 1.5, 2.8, 3.3, 8.4]
-    cols   = [ACCENT if y == max(yields) else "#2a2a2f" for y in yields]
-    fig = go.Figure(go.Bar(
-        x=crops, y=yields, marker_color=cols, marker_line_width=0,
-        text=[str(v) for v in yields], textposition="outside",
-        textfont=dict(size=9, color="#555558"),
-    ))
+    cols = [ACCENT if y == max(yields) else "#2a2a2f" for y in yields]
+    fig = go.Figure(
+        go.Bar(
+            x=crops,
+            y=yields,
+            marker_color=cols,
+            marker_line_width=0,
+            text=[str(v) for v in yields],
+            textposition="outside",
+            textfont=dict(size=9, color="#555558"),
+        )
+    )
     fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="DM Mono, monospace", color="#555558", size=10),
-        margin=dict(l=0, r=0, t=8, b=0), height=220,
-        xaxis=dict(gridcolor="#141416", tickfont=dict(size=9, color="#888"), tickangle=-20),
-        yaxis=dict(gridcolor="#141416", tickfont=dict(size=9),
-                   title=dict(text="Avg t/ha", font=dict(size=9, color="#555558"))),
-        bargap=0.35, showlegend=False,
+        margin=dict(l=0, r=0, t=8, b=0),
+        height=220,
+        xaxis=dict(
+            gridcolor="#141416", tickfont=dict(size=9, color="#888"), tickangle=-20
+        ),
+        yaxis=dict(
+            gridcolor="#141416",
+            tickfont=dict(size=9),
+            title=dict(text="Avg t/ha", font=dict(size=9, color="#555558")),
+        ),
+        bargap=0.35,
+        showlegend=False,
     )
     return fig
+
 
 def radar_fig(r):
     """Spider / radar chart normalising the four input dimensions to 0–100%."""
@@ -1205,39 +1390,62 @@ def radar_fig(r):
         min(100, r.get("pesticides", 0) / 500 * 100),
         min(100, (r.get("year", 1990) - 1960) / (2024 - 1960) * 100),
     ]
-    fig = go.Figure(go.Scatterpolar(
-        r=vals + [vals[0]], theta=cats + [cats[0]],
-        fill="toself", fillcolor="rgba(168,224,99,0.09)",
-        line=dict(color=ACCENT, width=1.8),
-        marker=dict(color=ACCENT, size=4),
-        hovertemplate="%{theta}: %{r:.0f}%<extra></extra>",
-    ))
+    fig = go.Figure(
+        go.Scatterpolar(
+            r=vals + [vals[0]],
+            theta=cats + [cats[0]],
+            fill="toself",
+            fillcolor="rgba(168,224,99,0.09)",
+            line=dict(color=ACCENT, width=1.8),
+            marker=dict(color=ACCENT, size=4),
+            hovertemplate="%{theta}: %{r:.0f}%<extra></extra>",
+        )
+    )
     fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="DM Mono, monospace", color="#555558", size=10),
-        margin=dict(l=24, r=24, t=16, b=16), height=260,
+        margin=dict(l=24, r=24, t=16, b=16),
+        height=260,
         polar=dict(
             bgcolor="rgba(0,0,0,0)",
-            radialaxis=dict(visible=True, range=[0, 100], gridcolor="#1a1a1f",
-                            tickfont=dict(size=8, color="#444"), showline=False,
-                            ticksuffix="%"),
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100],
+                gridcolor="#1a1a1f",
+                tickfont=dict(size=8, color="#444"),
+                showline=False,
+                ticksuffix="%",
+            ),
             angularaxis=dict(gridcolor="#1a1a1f", tickfont=dict(size=9, color="#888")),
         ),
         showlegend=False,
     )
     return fig
 
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  PLOTLY THEME
 # ══════════════════════════════════════════════════════════════════════════════
 PL = dict(
-    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
     font=dict(family="DM Mono, monospace", color="#555558", size=10.5),
     margin=dict(l=4, r=4, t=30, b=4),
-    xaxis=dict(gridcolor="#141416", linecolor="#1f1f22", zerolinecolor="#141416",
-               tickfont=dict(size=10), title_font=dict(size=10)),
-    yaxis=dict(gridcolor="#141416", linecolor="#1f1f22", zerolinecolor="#141416",
-               tickfont=dict(size=10), title_font=dict(size=10)),
+    xaxis=dict(
+        gridcolor="#141416",
+        linecolor="#1f1f22",
+        zerolinecolor="#141416",
+        tickfont=dict(size=10),
+        title_font=dict(size=10),
+    ),
+    yaxis=dict(
+        gridcolor="#141416",
+        linecolor="#1f1f22",
+        zerolinecolor="#141416",
+        tickfont=dict(size=10),
+        title_font=dict(size=10),
+    ),
 )
 ACCENT = "#a8e063"
 ACCENT2 = "#56ab2f"
@@ -1257,6 +1465,7 @@ ICONS = {
     "weather": """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>""",
 }
 
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  LEFT SIDEBAR NAV
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1265,17 +1474,22 @@ def render_sidebar():
     MODEL_OK = model is not None
 
     # Theme state for this render
-    _is_dark = (st.session_state.get("theme", "dark") == "dark")
-    _acc     = _ACC
+    _is_dark = st.session_state.get("theme", "dark") == "dark"
+    _acc = _ACC
     _tog_lbl = _TOGGLE_LABEL
 
     # Sun/moon icon HTML island
     # Theme SVG Icon
-    _theme_icon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>' if _is_dark else '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+    _theme_icon = (
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>'
+        if _is_dark
+        else '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+    )
 
     with st.sidebar:
         # ── Sidebar button styles ───────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <style>
         section[data-testid="stSidebar"] div[data-testid="stButton"] > button {{
             background: transparent !important; border: none !important;
@@ -1304,10 +1518,13 @@ def render_sidebar():
         }}
         section[data-testid="stSidebar"] .stButton {{ margin: 0 !important; padding: 0 !important; }}
         </style>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         # ── Logo + Brand ───────────────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div style="padding:24px 20px 16px;display:flex;align-items:center;gap:12px;">
           <!-- CropCast SVG logo mark -->
           <div style="width:36px;height:36px;flex-shrink:0;background:{'rgba(168,224,99,0.12)' if _is_dark else 'rgba(44,122,24,0.1)'};
@@ -1334,66 +1551,86 @@ def render_sidebar():
                         text-transform:uppercase;margin-top:3px;">Yield Intelligence</div>
           </div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         # ── Model status badge ─────────────────────────────────────────────
         if MODEL_OK:
             badge = '<span class="model-badge badge-ok"><span class="badge-dot"></span>Model Loaded</span>'
         else:
             badge = '<span class="model-badge badge-err"><span class="badge-dot"></span>Model Error</span>'
-        st.markdown(f'<div style="padding:0 20px 12px;">{badge}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div style="padding:0 20px 12px;">{badge}</div>', unsafe_allow_html=True
+        )
 
         # ── Divider ────────────────────────────────────────────────────────
-        st.markdown('<div style="height:1px;background:var(--border);margin:0;"></div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div style="height:1px;background:var(--border);margin:0;"></div>',
+            unsafe_allow_html=True,
+        )
 
         # ── Theme toggle ───────────────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div style="position:relative;height:0;overflow:visible;pointer-events:none;">
           <div style="position:absolute;top:0;left:16px;transform:translateY(22px) translateY(-50%);
                       color:var(--muted);line-height:0;">{_theme_icon}</div>
-        </div>""", unsafe_allow_html=True)
+        </div>""",
+            unsafe_allow_html=True,
+        )
         st.markdown('<div class="theme-toggle-full">', unsafe_allow_html=True)
         if st.button(_tog_lbl, key="theme_btn", use_container_width=True):
             st.session_state.theme = "light" if _is_dark else "dark"
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
         # ── Nav header ────────────────────────────────────────────────────
-        st.markdown('<div style="height:1px;background:var(--border);margin:0;"></div>', unsafe_allow_html=True)
-        st.markdown('<div style="padding:12px 20px 6px;font-size:.44rem;color:var(--muted);letter-spacing:.28em;text-transform:uppercase;">Navigation</div>',
-                    unsafe_allow_html=True)
+        st.markdown(
+            '<div style="height:1px;background:var(--border);margin:0;"></div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            '<div style="padding:12px 20px 6px;font-size:.44rem;color:var(--muted);letter-spacing:.28em;text-transform:uppercase;">Navigation</div>',
+            unsafe_allow_html=True,
+        )
 
         # ── Nav items ─────────────────────────────────────────────────────
         _nav = [
-            ("model",    ICONS["model"],    "Predict Yield"),
-            ("results",  ICONS["results"],  "Results"),
+            ("model", ICONS["model"], "Predict Yield"),
+            ("results", ICONS["results"], "Results"),
             ("insights", ICONS["insights"], "Model Insights"),
-            ("advisory", "🤖",              "Advisory Agent"),
-            ("about",    ICONS["about"],    "About"),
+            ("advisory", "🤖", "Advisory Agent"),
+            ("about", ICONS["about"], "About"),
         ]
 
         _result_pages = {"loading", "results"}
 
         for _key, _ico, _lb in _nav:
-            is_active = (
-                st.session_state.page == _key or
-                (_key == "results" and st.session_state.page in _result_pages)
+            is_active = st.session_state.page == _key or (
+                _key == "results" and st.session_state.page in _result_pages
             )
-            is_disabled = (_key == "results" and not st.session_state.result)
+            is_disabled = _key == "results" and not st.session_state.result
 
-            st.markdown(f'<div class="{"nav-on" if is_active else ""}">', unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="{"nav-on" if is_active else ""}">', unsafe_allow_html=True
+            )
 
             ic_col = "var(--accent)" if is_active else "var(--muted)"
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div style="position:relative;height:0;overflow:visible;pointer-events:none;">
               <div style="position:absolute;top:0;left:16px;transform:translateY(22px) translateY(-50%);
                           color:{ic_col};line-height:0;">{_ico}</div>
-            </div>""", unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
 
-            if st.button(_lb, key=f"nav_{_key}",
-                         use_container_width=True, disabled=is_disabled):
+            if st.button(
+                _lb, key=f"nav_{_key}", use_container_width=True, disabled=is_disabled
+            ):
                 if _key == "model":
-                    st.session_state.page   = "model"
+                    st.session_state.page = "model"
                     st.session_state.result = None
                 else:
                     st.session_state.page = _key
@@ -1402,13 +1639,17 @@ def render_sidebar():
             st.markdown("</div>", unsafe_allow_html=True)
 
         # ── Footer ────────────────────────────────────────────────────────
-        st.markdown("""
+        st.markdown(
+            """
         <div class="sbft">
             Random Forest &middot; 100 estimators<br>
             FAO Global Crop Dataset<br>
             UI: Streamlit Community Cloud &middot; Model: <code>shiavm006/Crop-yield_pridiction</code>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE: MODEL
@@ -1417,38 +1658,72 @@ def page_model():
     model, scaler, features_config = load_artifacts()
     areas, items = load_options()
     fnames = get_feature_names(features_config) or [
-        "Year", "average_rain_fall_mm_per_year", "pesticides_tonnes", "avg_temp"
+        "Year",
+        "average_rain_fall_mm_per_year",
+        "pesticides_tonnes",
+        "avg_temp",
     ]
 
-    st.markdown("""
+    st.markdown(
+        """
     <div class="page-header">
         <div class="page-title">Configure Prediction</div>
         <div class="page-sub">Set environmental and crop parameters to run the yield model</div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
     col_l, col_r = st.columns([1, 1], gap="large")
 
     with col_l:
-        st.markdown(f"""<div class="form-section-label">{ICONS['location']} &nbsp;Location & Crop</div>""",
-                    unsafe_allow_html=True)
+        st.markdown(
+            f"""<div class="form-section-label">{ICONS['location']} &nbsp;Location & Crop</div>""",
+            unsafe_allow_html=True,
+        )
         area = st.selectbox("Region / Country", options=areas, key="inp_area")
         item = st.selectbox("Crop Type", options=items, key="inp_item")
-        year = st.slider("Projection Year", min_value=1990, max_value=2030,
-                         value=2020, step=1, key="inp_year")
+        year = st.slider(
+            "Projection Year",
+            min_value=1990,
+            max_value=2030,
+            value=2020,
+            step=1,
+            key="inp_year",
+        )
 
     with col_r:
-        st.markdown(f"""<div class="form-section-label">{ICONS['weather']} &nbsp;Environmental Conditions</div>""",
-                    unsafe_allow_html=True)
-        rainfall  = st.slider("Annual Rainfall (mm/year)", min_value=0, max_value=4000,
-                               value=1000, step=25, key="inp_rain")
-        avg_temp  = st.slider("Average Temperature (°C)", min_value=-5, max_value=45,
-                               value=20, step=1, key="inp_temp",
-                               format="%d °C")
-        pesticides = st.slider("Pesticides Applied (tonnes)", min_value=0, max_value=5000,
-                                value=100, step=10, key="inp_pest")
+        st.markdown(
+            f"""<div class="form-section-label">{ICONS['weather']} &nbsp;Environmental Conditions</div>""",
+            unsafe_allow_html=True,
+        )
+        rainfall = st.slider(
+            "Annual Rainfall (mm/year)",
+            min_value=0,
+            max_value=4000,
+            value=1000,
+            step=25,
+            key="inp_rain",
+        )
+        avg_temp = st.slider(
+            "Average Temperature (°C)",
+            min_value=-5,
+            max_value=45,
+            value=20,
+            step=1,
+            key="inp_temp",
+            format="%d °C",
+        )
+        pesticides = st.slider(
+            "Pesticides Applied (tonnes)",
+            min_value=0,
+            max_value=5000,
+            value=100,
+            step=10,
+            key="inp_pest",
+        )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -1456,7 +1731,7 @@ def page_model():
     with btn_col:
         st.markdown('<div class="cta">', unsafe_allow_html=True)
         run = st.button("Run Prediction", key="run_btn", use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     if run:
         if model is None:
@@ -1464,46 +1739,57 @@ def page_model():
             return
         # Save inputs and navigate to full-page loading screen
         st.session_state.inputs = {
-            "area": area, "item": item, "year": year,
-            "rainfall": rainfall, "avg_temp": avg_temp, "pesticides": pesticides,
+            "area": area,
+            "item": item,
+            "year": year,
+            "rainfall": rainfall,
+            "avg_temp": avg_temp,
+            "pesticides": pesticides,
             "fnames": fnames,
         }
         st.session_state.page = "loading"
         st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE: RESULTS
 # ══════════════════════════════════════════════════════════════════════════════
 def page_results():
     if not st.session_state.result:
-        st.markdown("""
+        st.markdown(
+            """
         <div style="padding:80px 36px;text-align:center;">
             <div style="font-size:.65rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;">
                 No prediction data &mdash; run the model first
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
         return
 
-    r   = st.session_state.result
-    yv  = round(r["yield_hg_ha"] / 10_000, 2)
+    r = st.session_state.result
+    yv = round(r["yield_hg_ha"] / 10_000, 2)
     band, _ = quality_band(r["yield_hg_ha"])
 
-    _, mc, _ = st.columns([.02, .96, .02])
+    _, mc, _ = st.columns([0.02, 0.96, 0.02])
     with mc:
         # ── Page header ───────────────────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="pg">
           <div class="ey">Analysis Complete</div>
           <div class="ttl">Yield Report</div>
           <div class="sub">{r['item']} &mdash; {r['year']} &mdash; {r['rainfall']:,} mm rainfall</div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         # ── Download button at top ─────────────────────────────────────────────
-        _, dlcol, _ = st.columns([.01, .28, .71])
+        _, dlcol, _ = st.columns([0.01, 0.28, 0.71])
         with dlcol:
             st.markdown('<div class="btn-ghost">', unsafe_allow_html=True)
             st.download_button(
@@ -1520,58 +1806,80 @@ def page_results():
         # ── Hero + Gauge ───────────────────────────────────────────────────────
         hc, gc = st.columns([1.5, 1])
         with hc:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="hero">
               <div class="hb">{r['item']} &mdash; {r['year']}</div>
               <div class="hn">{yv}</div>
               <div class="hu">Tonnes per Hectare</div>
               <div class="hbd">{band}</div>
-            </div>""", unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
         with gc:
-            st.markdown('<div class="card"><div class="ch">Quality Gauge</div>',
-                        unsafe_allow_html=True)
-            st.plotly_chart(gauge_fig(r["yield_hg_ha"]), use_container_width=True,
-                            config={"displayModeBar": False})
+            st.markdown(
+                '<div class="card"><div class="ch">Quality Gauge</div>',
+                unsafe_allow_html=True,
+            )
+            st.plotly_chart(
+                gauge_fig(r["yield_hg_ha"]),
+                use_container_width=True,
+                config={"displayModeBar": False},
+            )
             st.markdown("</div>", unsafe_allow_html=True)
 
         # ── Metric chips ───────────────────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="mgrid">
           <div class="chip"><div class="cl">Predicted Yield</div><div class="cv">{yv}</div><div class="cs">t / ha</div></div>
           <div class="chip"><div class="cl">Rainfall</div><div class="cv">{r['rainfall']:,}</div><div class="cs">mm / year</div></div>
           <div class="chip"><div class="cl">Temperature</div><div class="cv">{r['avg_temp']}</div><div class="cs">°C avg</div></div>
           <div class="chip"><div class="cl">Pesticides</div><div class="cv">{r['pesticides']:,}</div><div class="cs">tonnes</div></div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         # ── Radar + Feature Importance ─────────────────────────────────────────
         cc1, cc2 = st.columns(2)
         with cc1:
-            st.markdown('<div class="card"><div class="ch">Input Profile</div>',
-                        unsafe_allow_html=True)
-            st.plotly_chart(radar_fig(r), use_container_width=True,
-                            config={"displayModeBar": False})
+            st.markdown(
+                '<div class="card"><div class="ch">Input Profile</div>',
+                unsafe_allow_html=True,
+            )
+            st.plotly_chart(
+                radar_fig(r), use_container_width=True, config={"displayModeBar": False}
+            )
             st.markdown("</div>", unsafe_allow_html=True)
         with cc2:
-            st.markdown('<div class="card"><div class="ch">Feature Importance</div>',
-                        unsafe_allow_html=True)
-            st.plotly_chart(importance_fig(), use_container_width=True,
-                            config={"displayModeBar": False})
+            st.markdown(
+                '<div class="card"><div class="ch">Feature Importance</div>',
+                unsafe_allow_html=True,
+            )
+            st.plotly_chart(
+                importance_fig(),
+                use_container_width=True,
+                config={"displayModeBar": False},
+            )
             st.markdown("</div>", unsafe_allow_html=True)
 
         # ── Inline report preview ──────────────────────────────────────────────
-        st.markdown('<div class="card"><div class="ch">Consulting Report Preview</div>',
-                    unsafe_allow_html=True)
+        st.markdown(
+            '<div class="card"><div class="ch">Consulting Report Preview</div>',
+            unsafe_allow_html=True,
+        )
         components.html(build_html_report(r), height=860, scrolling=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ── New prediction button ──────────────────────────────────────────────
         st.markdown("<br>", unsafe_allow_html=True)
-        _, nc, _ = st.columns([.01, .28, .71])
+        _, nc, _ = st.columns([0.01, 0.28, 0.71])
         with nc:
             st.markdown('<div class="btn-ghost">', unsafe_allow_html=True)
             # Refresh icon overlay
-            st.markdown("""
+            st.markdown(
+                """
             <div style="position:relative;height:0;overflow:visible;pointer-events:none;z-index:9;">
               <div style="position:absolute;top:14px;left:28px;line-height:0;color:var(--text2);">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -1579,9 +1887,11 @@ def page_results():
                   <path d="M3.51 15a9 9 0 1 0 .49-5.91"/>
                 </svg>
               </div>
-            </div>""", unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
             if st.button("   New Prediction", key="new_pred"):
-                st.session_state.page   = "model"
+                st.session_state.page = "model"
                 st.session_state.result = None
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1595,7 +1905,8 @@ def page_results():
 def page_loading():
     inp = st.session_state.inputs
     # Full-page animated screen
-    components.html("""<!DOCTYPE html><html><head><meta charset="UTF-8">
+    components.html(
+        """<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=DM+Sans:wght@300;400&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -1648,78 +1959,104 @@ ts.forEach((t,i)=>{
     document.getElementById('d'+i).className='sd on';document.getElementById('l'+i).className='sl on';
   },t);
 });
-</script></body></html>""", height=500)
+</script></body></html>""",
+        height=500,
+    )
 
     time.sleep(3.2)
 
     # Run actual prediction
     model, scaler, features_config = load_artifacts()
-    fnames = inp.get("fnames") or get_feature_names(features_config) or [
-        "Year", "average_rain_fall_mm_per_year", "pesticides_tonnes", "avg_temp"
-    ]
-    X        = build_row(inp["area"], inp["item"], inp["year"],
-                         inp["rainfall"], inp["pesticides"], inp["avg_temp"], fnames)
+    fnames = (
+        inp.get("fnames")
+        or get_feature_names(features_config)
+        or ["Year", "average_rain_fall_mm_per_year", "pesticides_tonnes", "avg_temp"]
+    )
+    X = build_row(
+        inp["area"],
+        inp["item"],
+        inp["year"],
+        inp["rainfall"],
+        inp["pesticides"],
+        inp["avg_temp"],
+        fnames,
+    )
     X_scaled = scaler.transform(X)
-    pred     = float(model.predict(X_scaled)[0])
+    pred = float(model.predict(X_scaled)[0])
 
-    scores         = make_factor_scores(inp["rainfall"], inp["avg_temp"], inp["pesticides"])
-    b_avg, b_glob  = make_benchmarks(pred, inp["rainfall"])
-    trend          = make_trend(pred, inp["year"])
+    scores = make_factor_scores(inp["rainfall"], inp["avg_temp"], inp["pesticides"])
+    b_avg, b_glob = make_benchmarks(pred, inp["rainfall"])
+    trend = make_trend(pred, inp["year"])
 
     st.session_state.result = {
-        "yield_hg_ha":    round(pred, 0),
-        "ci_low":         round(pred * 0.90, 0),
-        "ci_high":        round(pred * 1.10, 0),
-        "area":           inp["area"],  "item":      inp["item"],
-        "year":           inp["year"],  "rainfall":  inp["rainfall"],
-        "avg_temp":       inp["avg_temp"], "pesticides": inp["pesticides"],
-        "scores":         scores,
-        "benchmark_avg":  b_avg,
+        "yield_hg_ha": round(pred, 0),
+        "ci_low": round(pred * 0.90, 0),
+        "ci_high": round(pred * 1.10, 0),
+        "area": inp["area"],
+        "item": inp["item"],
+        "year": inp["year"],
+        "rainfall": inp["rainfall"],
+        "avg_temp": inp["avg_temp"],
+        "pesticides": inp["pesticides"],
+        "scores": scores,
+        "benchmark_avg": b_avg,
         "benchmark_global": b_glob,
-        "trend":          trend,
+        "trend": trend,
     }
     st.session_state.page = "results"
     st.rerun()
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE: INSIGHTS
 # ══════════════════════════════════════════════════════════════════════════════
 def page_insights():
-    st.markdown("""
+    st.markdown(
+        """
     <div class="page-header">
         <div class="page-title">Model Insights</div>
         <div class="page-sub">Performance metrics and feature analysis of the Random Forest Regressor trained on FAO global crop production data</div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
     # ── Stat chips ────────────────────────────────────────────────────────────
     sc1, sc2, sc3, sc4 = st.columns(4)
     for col, val, lbl, sub, delay in [
-        (sc1, "~0.94", "R\u00b2 Score",   "Train set performance",     "0.06s"),
-        (sc2, "~0.87", "Test R\u00b2",    "Generalisation score",      "0.13s"),
-        (sc3, "100",   "Trees",           "n_estimators",              "0.20s"),
-        (sc4, "5",     "Features",        "Year + climate + crop OHE", "0.27s"),
+        (sc1, "~0.94", "R\u00b2 Score", "Train set performance", "0.06s"),
+        (sc2, "~0.87", "Test R\u00b2", "Generalisation score", "0.13s"),
+        (sc3, "100", "Trees", "n_estimators", "0.20s"),
+        (sc4, "5", "Features", "Year + climate + crop OHE", "0.27s"),
     ]:
         with col:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="metric-card istat" style="animation-delay:{delay};">
                 <span class="istat-val">{val}</span>
                 <div class="istat-lbl">{lbl}</div>
                 <div class="istat-sub">{sub}</div>
-            </div>""", unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── Feature importance chart + training config ─────────────────────────────
     ch1, ch2 = st.columns([3, 2], gap="large")
     with ch1:
-        st.markdown("""<div class="metric-card"><div class="form-section-label">Feature Importance</div>""",
-                    unsafe_allow_html=True)
-        st.plotly_chart(importance_fig(), use_container_width=True, config={"displayModeBar": False})
+        st.markdown(
+            """<div class="metric-card"><div class="form-section-label">Feature Importance</div>""",
+            unsafe_allow_html=True,
+        )
+        st.plotly_chart(
+            importance_fig(), use_container_width=True, config={"displayModeBar": False}
+        )
         st.markdown("</div>", unsafe_allow_html=True)
     with ch2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <div class="form-section-label">Training Config</div>
             <div class="cfg-row"><span class="cfg-k">algorithm</span><span class="cfg-v">RandomForestRegressor</span></div>
@@ -1730,14 +2067,20 @@ def page_insights():
             <div class="cfg-row"><span class="cfg-k">categorical</span><span class="cfg-v">Item (OHE, ~10 crops)</span></div>
             <div class="cfg-row"><span class="cfg-k">target unit</span><span class="cfg-v">hg/ha \u2192 t/ha</span></div>
             <div class="cfg-row" style="border-bottom:none"><span class="cfg-k">dataset</span><span class="cfg-v">FAO crop production</span></div>
-        </div>""", unsafe_allow_html=True)
+        </div>""",
+            unsafe_allow_html=True,
+        )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── Avg yield by crop ──────────────────────────────────────────────────────
-    st.markdown("""<div class="metric-card"><div class="form-section-label">Average Yield by Crop (FAO t/ha)</div>""",
-                unsafe_allow_html=True)
-    st.plotly_chart(crop_yield_fig(), use_container_width=True, config={"displayModeBar": False})
+    st.markdown(
+        """<div class="metric-card"><div class="form-section-label">Average Yield by Crop (FAO t/ha)</div>""",
+        unsafe_allow_html=True,
+    )
+    st.plotly_chart(
+        crop_yield_fig(), use_container_width=True, config={"displayModeBar": False}
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -1745,19 +2088,25 @@ def page_insights():
     # ── Feature ranking + performance bars ────────────────────────────────────
     fr1, fr2 = st.columns([3, 2], gap="large")
     with fr1:
-        st.markdown("""<div class="metric-card"><div class="form-section-label">Feature Ranking</div>""",
-                    unsafe_allow_html=True)
+        st.markdown(
+            """<div class="metric-card"><div class="form-section-label">Feature Ranking</div>""",
+            unsafe_allow_html=True,
+        )
         for i, (nm, imp) in enumerate(FEATS):
             pct = int(imp * 100)
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="fbr" style="animation-delay:{i*.06:.2f}s;">
                 <div class="fbn">{nm}</div>
                 <div class="fbt"><div class="fbf" style="width:{pct}%;animation-delay:{i*.06+.07:.2f}s;"></div></div>
                 <div class="fbp">{pct}%</div>
-            </div>""", unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
         st.markdown("</div>", unsafe_allow_html=True)
     with fr2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <div class="form-section-label">Performance Breakdown</div>
             <div class="perf-row"><div class="perf-label">Train R\u00b2</div><div class="perf-bar-wrap"><div class="perf-bar" style="width:94%;"></div></div><div class="perf-val">~0.94</div></div>
@@ -1765,40 +2114,58 @@ def page_insights():
             <div class="perf-row"><div class="perf-label">Rainfall imp.</div><div class="perf-bar-wrap"><div class="perf-bar" style="width:82%;background:linear-gradient(90deg,#3a9bd5,#a8e063);"></div></div><div class="perf-val">28%</div></div>
             <div class="perf-row"><div class="perf-label">Temp imp.</div><div class="perf-bar-wrap"><div class="perf-bar" style="width:72%;"></div></div><div class="perf-val">22%</div></div>
             <div class="perf-row" style="border-bottom:none;"><div class="perf-label">Crop OHE</div><div class="perf-bar-wrap"><div class="perf-bar" style="width:55%;"></div></div><div class="perf-val">15%</div></div>
-        </div>""", unsafe_allow_html=True)
+        </div>""",
+            unsafe_allow_html=True,
+        )
 
     st.markdown("</div>", unsafe_allow_html=True)  # page-content
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE: ABOUT
 # ══════════════════════════════════════════════════════════════════════════════
 def page_about():
-    st.markdown("""
+    st.markdown(
+        """
     <div class="page-header">
         <div class="page-title">About CropCast</div>
         <div class="page-sub">A professional machine learning interface for global agricultural yield prediction, powered by a Random Forest Regressor trained on FAO crop production data and hosted on Hugging Face</div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
     # ── Info cards grid ───────────────────────────────────────────────────────
     st.markdown('<div class="abg">', unsafe_allow_html=True)
     for lbl, val, desc in [
-        ("Dataset",   "FAO",            "Global crop yield, rainfall, temperature, pesticides"),
-        ("Algorithm", "Random Forest",  "100 estimators \u00b7 sklearn \u00b7 StandardScaler pipeline"),
-        ("Target",    "t / ha",         "FAO hg/ha output converted to tonnes per hectare"),
-        ("Hosting",   "Streamlit + HF", "UI on Streamlit Community Cloud; model artifacts on Hugging Face (shiavm006/Crop-yield_pridiction)"),
+        ("Dataset", "FAO", "Global crop yield, rainfall, temperature, pesticides"),
+        (
+            "Algorithm",
+            "Random Forest",
+            "100 estimators \u00b7 sklearn \u00b7 StandardScaler pipeline",
+        ),
+        ("Target", "t / ha", "FAO hg/ha output converted to tonnes per hectare"),
+        (
+            "Hosting",
+            "Streamlit + HF",
+            "UI on Streamlit Community Cloud; model artifacts on Hugging Face (shiavm006/Crop-yield_pridiction)",
+        ),
     ]:
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="abt">
             <div class="abl">{lbl}</div>
             <div class="abv">{val}</div>
             <div class="abd">{desc}</div>
-        </div>""", unsafe_allow_html=True)
+        </div>""",
+            unsafe_allow_html=True,
+        )
     st.markdown("</div>", unsafe_allow_html=True)
 
     # ── Model features card ───────────────────────────────────────────────────
-    st.markdown("""
+    st.markdown(
+        """
     <div class="metric-card" style="margin-bottom:12px;">
         <div class="form-section-label">Model Features</div>
         <div style="font-size:13px;color:var(--muted);line-height:2;font-weight:300;">
@@ -1811,10 +2178,13 @@ def page_about():
             <strong style="color:var(--text2);font-weight:500;">Area (country)</strong> was dropped &mdash; the model predicts yield purely from climate and crop type.<br>
             FAO output is in <strong style="color:var(--text2);">hg/ha</strong>; we divide by 10,000 to return <strong style="color:var(--accent);">t/ha</strong>.
         </div>
-    </div>""", unsafe_allow_html=True)
+    </div>""",
+        unsafe_allow_html=True,
+    )
 
     # ── HuggingFace integration card ──────────────────────────────────────────
-    st.markdown("""
+    st.markdown(
+        """
     <div class="metric-card">
         <div class="form-section-label">HuggingFace Integration</div>
         <div style="font-size:13px;color:var(--muted);line-height:2.1;font-weight:300;">
@@ -1832,9 +2202,12 @@ def page_about():
             &rarr; <code style="background:var(--surface3);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:11px;">scaler.transform</code>
             &rarr; <code style="background:var(--surface3);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:11px;">model.predict</code> &rarr; &divide; 10000
         </div>
-    </div>""", unsafe_allow_html=True)
+    </div>""",
+        unsafe_allow_html=True,
+    )
 
     st.markdown("</div>", unsafe_allow_html=True)  # page-content
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE: ADVISORY AGENT  (conversational chat + doc upload)
@@ -1885,32 +2258,60 @@ def _ensure_yield_prediction(ctx: dict) -> dict:
         return {"error": f"Could not import agent: {e}"}
     try:
         result = run_agent(
-            crop=ctx["crop"], area=ctx["area"], year=int(ctx["year"]),
-            rainfall=float(ctx["rainfall"]), temperature=float(ctx["temperature"]),
+            crop=ctx["crop"],
+            area=ctx["area"],
+            year=int(ctx["year"]),
+            rainfall=float(ctx["rainfall"]),
+            temperature=float(ctx["temperature"]),
             pesticides=float(ctx["pesticides"]),
             user_query="Generate a baseline advisory.",
         )
         ctx["predicted_yield_tha"] = result.get("predicted_yield_tha")
-        ctx["predicted_yield_hg"]  = result.get("predicted_yield_hg")
-        ctx["yield_band"]          = result.get("yield_band")
-        ctx["yield_risk"]          = result.get("yield_risk")
-        ctx["benchmark_avg"]       = result.get("benchmark_avg")
+        ctx["predicted_yield_hg"] = result.get("predicted_yield_hg")
+        ctx["yield_band"] = result.get("yield_band")
+        ctx["yield_risk"] = result.get("yield_risk")
+        ctx["benchmark_avg"] = result.get("benchmark_avg")
         return {"ok": True, "advisory": result}
     except Exception as e:
         return {"error": str(e)}
 
 
 def page_advisory():
-    CROPS = ["Wheat", "Rice, paddy", "Maize", "Potatoes", "Cassava",
-             "Soybeans", "Sorghum", "Sweet potatoes"]
-    AREAS = sorted([
-        "India", "Brazil", "USA", "China", "Argentina", "Australia",
-        "Canada", "France", "Germany", "Indonesia", "Mexico", "Nigeria",
-        "Pakistan", "Russia", "Thailand", "Turkey", "Ukraine",
-    ])
+    CROPS = [
+        "Wheat",
+        "Rice, paddy",
+        "Maize",
+        "Potatoes",
+        "Cassava",
+        "Soybeans",
+        "Sorghum",
+        "Sweet potatoes",
+    ]
+    AREAS = sorted(
+        [
+            "India",
+            "Brazil",
+            "USA",
+            "China",
+            "Argentina",
+            "Australia",
+            "Canada",
+            "France",
+            "Germany",
+            "Indonesia",
+            "Mexico",
+            "Nigeria",
+            "Pakistan",
+            "Russia",
+            "Thailand",
+            "Turkey",
+            "Ukraine",
+        ]
+    )
 
     # ── Page-scoped chat styles (compact, uniform) ────────────────────────────
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     /* Compact header for this page */
     .adv-head { padding: 22px 36px 6px; animation: fadeUp .4s ease both; }
@@ -1985,45 +2386,73 @@ def page_advisory():
     [data-testid="stChatMessageContent"] { font-size: .92rem; line-height: 1.65; }
     [data-testid="stChatMessage"] { background: transparent !important; }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # ── Compact header ────────────────────────────────────────────────────────
-    st.markdown("""
+    st.markdown(
+        """
     <div class="adv-head">
         <div class="adv-eyebrow">Milestone 2 · Agentic AI</div>
         <div class="adv-title">CropCast Advisor · Chat with the Agent</div>
         <div class="adv-sub">Conversational agronomist · LangGraph + FAISS RAG + Claude. Upload a field report or ask anything about your farm.</div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
     ctx = st.session_state.chat_farm_ctx
 
     # ── Status strip (always 5 chips, never wraps mid-row on desktop) ─────────
-    risk_colors = {"Low Risk": "#a8e063", "Medium Risk": "#f5a623", "High Risk": "#ff6b6b"}
-    band_colors = {"Excellent": "#a8e063", "Good": "#6abf3a", "Fair": "#f5a623", "Poor": "#ff6b6b"}
+    risk_colors = {
+        "Low Risk": "#a8e063",
+        "Medium Risk": "#f5a623",
+        "High Risk": "#ff6b6b",
+    }
+    band_colors = {
+        "Excellent": "#a8e063",
+        "Good": "#6abf3a",
+        "Fair": "#f5a623",
+        "Poor": "#ff6b6b",
+    }
 
     def _chip(label, value, color="var(--text)"):
-        return (f'<div class="adv-chip">'
-                f'<div class="adv-chip-k">{label}</div>'
-                f'<div class="adv-chip-v" style="color:{color};">{value}</div></div>')
+        return (
+            f'<div class="adv-chip">'
+            f'<div class="adv-chip-k">{label}</div>'
+            f'<div class="adv-chip-v" style="color:{color};">{value}</div></div>'
+        )
 
-    yield_val = (f"{ctx.get('predicted_yield_tha')} t/ha"
-                 if ctx.get("predicted_yield_tha") is not None else "not run")
-    yield_col = ("var(--accent)" if ctx.get("predicted_yield_tha") is not None
-                 else "var(--text2)")
+    yield_val = (
+        f"{ctx.get('predicted_yield_tha')} t/ha"
+        if ctx.get("predicted_yield_tha") is not None
+        else "not run"
+    )
+    yield_col = (
+        "var(--accent)"
+        if ctx.get("predicted_yield_tha") is not None
+        else "var(--text2)"
+    )
 
     st.markdown(
         '<div class="adv-chips">'
-        + _chip("Crop",   ctx.get("crop") or "—")
+        + _chip("Crop", ctx.get("crop") or "—")
         + _chip("Region", ctx.get("area") or "—")
-        + _chip("Yield",  yield_val, yield_col)
-        + _chip("Band",   ctx.get("yield_band") or "—",
-                band_colors.get(ctx.get("yield_band") or "", "var(--text)"))
-        + _chip("Risk",   ctx.get("yield_risk") or "—",
-                risk_colors.get(ctx.get("yield_risk") or "", "var(--text)"))
-        + '</div>',
+        + _chip("Yield", yield_val, yield_col)
+        + _chip(
+            "Band",
+            ctx.get("yield_band") or "—",
+            band_colors.get(ctx.get("yield_band") or "", "var(--text)"),
+        )
+        + _chip(
+            "Risk",
+            ctx.get("yield_risk") or "—",
+            risk_colors.get(ctx.get("yield_risk") or "", "var(--text)"),
+        )
+        + "</div>",
         unsafe_allow_html=True,
     )
 
@@ -2034,29 +2463,52 @@ def page_advisory():
         with st.expander("🌾  Farm context", expanded=False):
             c1, c2 = st.columns(2)
             with c1:
-                ctx["crop"] = st.selectbox("Crop", CROPS,
+                ctx["crop"] = st.selectbox(
+                    "Crop",
+                    CROPS,
                     index=CROPS.index(ctx["crop"]) if ctx["crop"] in CROPS else 0,
-                    key="ch_crop")
-                ctx["area"] = st.selectbox("Region", AREAS,
+                    key="ch_crop",
+                )
+                ctx["area"] = st.selectbox(
+                    "Region",
+                    AREAS,
                     index=AREAS.index(ctx["area"]) if ctx["area"] in AREAS else 0,
-                    key="ch_area")
-                ctx["year"] = st.number_input("Year", 1990, 2030, int(ctx["year"]),
-                                              key="ch_year")
+                    key="ch_area",
+                )
+                ctx["year"] = st.number_input(
+                    "Year", 1990, 2030, int(ctx["year"]), key="ch_year"
+                )
             with c2:
-                ctx["rainfall"]    = st.number_input("Rainfall (mm/yr)", 0.0, 5000.0,
-                                                     float(ctx["rainfall"]), 10.0,
-                                                     key="ch_rain")
-                ctx["temperature"] = st.number_input("Avg temp (°C)", -10.0, 50.0,
-                                                     float(ctx["temperature"]), 0.5,
-                                                     key="ch_temp")
-                ctx["pesticides"]  = st.number_input("Pesticides (t)", 0.0, 50000.0,
-                                                     float(ctx["pesticides"]), 10.0,
-                                                     key="ch_pest")
+                ctx["rainfall"] = st.number_input(
+                    "Rainfall (mm/yr)",
+                    0.0,
+                    5000.0,
+                    float(ctx["rainfall"]),
+                    10.0,
+                    key="ch_rain",
+                )
+                ctx["temperature"] = st.number_input(
+                    "Avg temp (°C)",
+                    -10.0,
+                    50.0,
+                    float(ctx["temperature"]),
+                    0.5,
+                    key="ch_temp",
+                )
+                ctx["pesticides"] = st.number_input(
+                    "Pesticides (t)",
+                    0.0,
+                    50000.0,
+                    float(ctx["pesticides"]),
+                    10.0,
+                    key="ch_pest",
+                )
 
             cc1, cc2 = st.columns(2)
             with cc1:
-                if st.button("Run ML prediction", use_container_width=True,
-                             key="ch_predict"):
+                if st.button(
+                    "Run ML prediction", use_container_width=True, key="ch_predict"
+                ):
                     with st.spinner("Running Random Forest..."):
                         out = _ensure_yield_prediction(ctx)
                     if out.get("error"):
@@ -2067,10 +2519,16 @@ def page_advisory():
                             f"{ctx['yield_band']} · {ctx['yield_risk']}"
                         )
             with cc2:
-                if st.button("Reset context", use_container_width=True,
-                             key="ch_reset_ctx"):
-                    for k in ("predicted_yield_tha", "predicted_yield_hg",
-                              "yield_band", "yield_risk", "benchmark_avg"):
+                if st.button(
+                    "Reset context", use_container_width=True, key="ch_reset_ctx"
+                ):
+                    for k in (
+                        "predicted_yield_tha",
+                        "predicted_yield_hg",
+                        "yield_band",
+                        "yield_risk",
+                        "benchmark_avg",
+                    ):
                         ctx[k] = None
                     st.rerun()
 
@@ -2090,28 +2548,36 @@ def page_advisory():
                 chars = len(text)
                 st.success(f"Loaded {len(names)} file(s) · {chars:,} chars.")
             if st.session_state.chat_uploaded_names:
-                st.caption("Active: " + ", ".join(
-                    f"`{n}`" for n in st.session_state.chat_uploaded_names))
-                if st.button("Remove uploaded docs", use_container_width=True,
-                             key="ch_clear_files"):
+                st.caption(
+                    "Active: "
+                    + ", ".join(f"`{n}`" for n in st.session_state.chat_uploaded_names)
+                )
+                if st.button(
+                    "Remove uploaded docs",
+                    use_container_width=True,
+                    key="ch_clear_files",
+                ):
                     st.session_state.chat_uploaded_text = ""
                     st.session_state.chat_uploaded_names = []
                     st.rerun()
 
     # ── Chat toolbar (uniform 2-button row) ───────────────────────────────────
     st.markdown('<div class="adv-toolbar">', unsafe_allow_html=True)
-    tb1, tb2, _tb_spacer = st.columns([.22, .28, .50])
+    tb1, tb2, _tb_spacer = st.columns([0.22, 0.28, 0.50])
     with tb1:
         if st.button("🧹  New chat", use_container_width=True, key="ch_reset"):
             st.session_state.chat_messages = []
             st.rerun()
     with tb2:
-        if st.button("📋  Structured report", use_container_width=True,
-                     key="ch_full_report",
-                     help="Run the full LangGraph pipeline and post a structured advisory into the chat."):
+        if st.button(
+            "📋  Structured report",
+            use_container_width=True,
+            key="ch_full_report",
+            help="Run the full LangGraph pipeline and post a structured advisory into the chat.",
+        ):
             _run_structured_report_into_chat(ctx)
             st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # ── Chat history render ───────────────────────────────────────────────────
     _SUGGESTIONS = [
@@ -2138,10 +2604,12 @@ def page_advisory():
                 if st.button(s, key=f"ch_sugg_{i}", use_container_width=True):
                     st.session_state["__pending_prompt"] = s
                     st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     for m in st.session_state.chat_messages:
-        with st.chat_message(m["role"], avatar="🌾" if m["role"] == "assistant" else None):
+        with st.chat_message(
+            m["role"], avatar="🌾" if m["role"] == "assistant" else None
+        ):
             st.markdown(m["content"])
             if m["role"] == "assistant" and m.get("sources"):
                 with st.expander("📚  References used in this reply"):
@@ -2154,8 +2622,10 @@ def page_advisory():
 
     if prompt:
         if not os.environ.get("ANTHROPIC_API_KEY"):
-            st.warning("`ANTHROPIC_API_KEY` not set — the agent will use a local (non-LLM) fallback response. "
-                       "Add the key to your `.env` to unlock full reasoning.")
+            st.warning(
+                "`ANTHROPIC_API_KEY` not set — the agent will use a local (non-LLM) fallback response. "
+                "Add the key to your `.env` to unlock full reasoning."
+            )
 
         # Append user message + render immediately
         st.session_state.chat_messages.append({"role": "user", "content": prompt})
@@ -2174,6 +2644,7 @@ def page_advisory():
             placeholder.markdown("_Thinking…_")
             try:
                 from agent.graph import run_chat
+
                 result = run_chat(
                     messages=api_history,
                     farm_ctx=ctx,
@@ -2182,19 +2653,24 @@ def page_advisory():
             except Exception as e:
                 placeholder.empty()
                 st.error(f"Agent error: {e}")
-                st.session_state.chat_messages.append({
-                    "role": "assistant",
-                    "content": f"I hit an error while reasoning: `{e}`. "
-                               "Please check the Anthropic API key / network and try again.",
-                    "sources": [],
-                })
+                st.session_state.chat_messages.append(
+                    {
+                        "role": "assistant",
+                        "content": f"I hit an error while reasoning: `{e}`. "
+                        "Please check the Anthropic API key / network and try again.",
+                        "sources": [],
+                    }
+                )
                 return
 
             if result.get("error") and not result.get("assistant_reply"):
                 reply = f"⚠️ {result['error']}"
                 sources = []
             else:
-                reply = result.get("assistant_reply") or "I wasn't able to generate a response."
+                reply = (
+                    result.get("assistant_reply")
+                    or "I wasn't able to generate a response."
+                )
                 sources = result.get("source_files") or []
 
             placeholder.markdown(reply)
@@ -2203,11 +2679,13 @@ def page_advisory():
                     for s in sources:
                         st.caption(f"• {s}")
 
-        st.session_state.chat_messages.append({
-            "role": "assistant",
-            "content": reply,
-            "sources": sources,
-        })
+        st.session_state.chat_messages.append(
+            {
+                "role": "assistant",
+                "content": reply,
+                "sources": sources,
+            }
+        )
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -2217,11 +2695,13 @@ def _run_structured_report_into_chat(ctx: dict) -> None:
     try:
         from agent.graph import run_agent
     except Exception as e:
-        st.session_state.chat_messages.append({
-            "role": "assistant",
-            "content": f"Could not import agent: `{e}`",
-            "sources": [],
-        })
+        st.session_state.chat_messages.append(
+            {
+                "role": "assistant",
+                "content": f"Could not import agent: `{e}`",
+                "sources": [],
+            }
+        )
         return
 
     user_msg = (
@@ -2241,26 +2721,34 @@ def _run_structured_report_into_chat(ctx: dict) -> None:
             user_query=user_msg,
         )
     except Exception as e:
-        st.session_state.chat_messages.append({
-            "role": "assistant",
-            "content": f"Pipeline error: `{e}`",
-            "sources": [],
-        })
+        st.session_state.chat_messages.append(
+            {
+                "role": "assistant",
+                "content": f"Pipeline error: `{e}`",
+                "sources": [],
+            }
+        )
         return
 
     # Sync predictions back into chat context
-    ctx["predicted_yield_tha"] = result.get("predicted_yield_tha") or ctx.get("predicted_yield_tha")
-    ctx["predicted_yield_hg"]  = result.get("predicted_yield_hg")  or ctx.get("predicted_yield_hg")
-    ctx["yield_band"]          = result.get("yield_band")          or ctx.get("yield_band")
-    ctx["yield_risk"]          = result.get("yield_risk")          or ctx.get("yield_risk")
-    ctx["benchmark_avg"]       = result.get("benchmark_avg")       or ctx.get("benchmark_avg")
+    ctx["predicted_yield_tha"] = result.get("predicted_yield_tha") or ctx.get(
+        "predicted_yield_tha"
+    )
+    ctx["predicted_yield_hg"] = result.get("predicted_yield_hg") or ctx.get(
+        "predicted_yield_hg"
+    )
+    ctx["yield_band"] = result.get("yield_band") or ctx.get("yield_band")
+    ctx["yield_risk"] = result.get("yield_risk") or ctx.get("yield_risk")
+    ctx["benchmark_avg"] = result.get("benchmark_avg") or ctx.get("benchmark_avg")
 
     if result.get("error"):
-        st.session_state.chat_messages.append({
-            "role": "assistant",
-            "content": f"⚠️ {result['error']}",
-            "sources": [],
-        })
+        st.session_state.chat_messages.append(
+            {
+                "role": "assistant",
+                "content": f"⚠️ {result['error']}",
+                "sources": [],
+            }
+        )
         return
 
     # Format as markdown
@@ -2292,20 +2780,29 @@ def _run_structured_report_into_chat(ctx: dict) -> None:
     if result.get("disclaimer"):
         md.append(f"> ⚠️ *{result['disclaimer']}*")
 
-    st.session_state.chat_messages.append({
-        "role": "assistant",
-        "content": "\n".join(md),
-        "sources": result.get("source_files") or [],
-    })
+    st.session_state.chat_messages.append(
+        {
+            "role": "assistant",
+            "content": "\n".join(md),
+            "sources": result.get("source_files") or [],
+        }
+    )
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  ROUTER
 # ══════════════════════════════════════════════════════════════════════════════
 render_sidebar()
 
-if   st.session_state.page == "model":    page_model()
-elif st.session_state.page == "loading":  page_loading()
-elif st.session_state.page == "results":  page_results()
-elif st.session_state.page == "insights": page_insights()
-elif st.session_state.page == "advisory": page_advisory()
-elif st.session_state.page == "about":    page_about()
+if st.session_state.page == "model":
+    page_model()
+elif st.session_state.page == "loading":
+    page_loading()
+elif st.session_state.page == "results":
+    page_results()
+elif st.session_state.page == "insights":
+    page_insights()
+elif st.session_state.page == "advisory":
+    page_advisory()
+elif st.session_state.page == "about":
+    page_about()
